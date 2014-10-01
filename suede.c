@@ -22,10 +22,10 @@ KeyEvent (int nCode, WPARAM wParam, LPARAM lParam) {
 }
 
 void MsgLoop() {
-  MSG message;
-  while (GetMessage(&message, 0, 0, 0)) {
-    TranslateMessage(&message);
-    DispatchMessage(&message);
+  MSG mg;
+  while (GetMessage(&mg, 0, 0, 0)) {
+    TranslateMessage(&mg);
+    DispatchMessage(&mg);
   }
 }
 
