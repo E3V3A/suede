@@ -22,8 +22,7 @@ KeyEvent (int nCode, WPARAM wParam, LPARAM lParam) {
 }
 
 int main() {
-  HINSTANCE hExe = GetModuleHandle(0);
-  hKeyHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC) KeyEvent, hExe, 0);
+  hKeyHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC) KeyEvent, 0, 0);
   MSG mg;
   while (GetMessage(&mg, 0, 0, 0)) {
     TranslateMessage(&mg);
