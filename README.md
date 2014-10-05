@@ -1,9 +1,17 @@
 ### Suede
 Windows API keylogger
 
-### Install
+### Working with the source code
 
-    ./release.sh
+    make
+
+Or
+
+    make dist
+
+Or
+
+    make clean
 
 ### Thanks
 [Keylogger in C](http://hackerthedude.blogspot.com/2009/10/keylogger-in-c.html)
