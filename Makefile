@@ -1,14 +1,19 @@
 HOST = x86_64-w64-mingw32
+CFLAGS = -s -Wall -Wextra -pedantic -std=c99 -mwindows
+PROGRAM = suede
+CC = $(HOST)-gcc
+WINDRES = $(HOST)-windres
 VR != git log --oneline | wc -l
 .RECIPEPREFIX != ps
 
-all:
-  $(HOST)-windres suede.rc suede.o
-  $(HOST)-gcc -s -Wall -Wextra -pedantic -std=c99 \
-    -mwindows -osuede suede.c suede.o
+$(PROGRAM):
+  $(WINDRES) $@.rc $@.coff
+  $(CC) $(CFLAGS) -o $@ $@.c $@.coff
 
-dist: all
-  zip -9r suede-$(VR).zip suede.exe README.md
+dist: $(PROGRAM)
+  7za a $<-$(VR).zip $<.exe README.md
 
 clean:
-  rm -fv *.o *.exe *.zip *.log
+  rm -fv *.coff *.exe *.zip *.log
+
+.PHONY: $(PROGRAM)

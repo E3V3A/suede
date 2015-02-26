@@ -1,4 +1,4 @@
+*.coff
 *.exe
 *.log
-*.o
 *.zip
