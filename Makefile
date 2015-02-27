@@ -11,7 +11,7 @@ $(PROGRAM):
   $(CC) $(CFLAGS) -o $@ $@.c $@.coff
 
 dist: $(PROGRAM)
-  7za a $<-$(VR).zip $<.exe README.md
+  7za a $<-$(VR).zip $<.exe kill.bat README.md
 
 clean:
   rm -fv *.coff *.exe *.zip *.log
